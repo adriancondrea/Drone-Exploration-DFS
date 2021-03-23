@@ -104,14 +104,14 @@ class Drone:
 
 
 class Node:
-    '''
+    """
     Node class for A* pathfinding
     parent - parent of current Node
     position - current Node cooridnates (x,y)
     g - cost from start to current node
     h - heuristic based estimated cost for current Node to end Node
     f - total cost of current Node. f = g + h
-    '''
+    """
 
     def __init__(self, parent=None, position=None):
         self.parent = parent

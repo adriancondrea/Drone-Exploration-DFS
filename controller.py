@@ -8,18 +8,22 @@ def euclidean_distance(pos1, pos2):
     return (pos1[0] - pos2[0]) ** 2 + (pos1[1] - pos2[1]) ** 2
 
 
+def manhattan_distance(pos1, pos2):
+    return abs(pos1[0] - pos2[0]) + abs(pos1[1] - pos2[1])
+
+
 '''
 returns the path from start to current node in a list
 '''
 
 
 def path(current_node):
-    path = []
+    pathList = []
     current = current_node
     while current is not None:
-        path.insert(0, current.position)
+        pathList.insert(0, current.position)
         current = current.parent
-    return path
+    return pathList
 
 
 class Controller:
@@ -175,7 +179,7 @@ class Controller:
                     continue
                 # compute h values
                 # h - heuristic based estimated cost for current Node to end Node
-                child.h = euclidean_distance(child.position, end_node.position)
+                child.h = manhattan_distance(child.position, end_node.position)
                 # if children is already in to_visit_list, but with a lower h cost, move to next children
                 already_in_to_visit = False
                 for to_visit_node in to_visit_list:
