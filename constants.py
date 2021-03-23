@@ -40,14 +40,14 @@ WALL = 1
 NOT_VISITED = 0
 VISITED = 1
 
-# define the image size
-IMAGE_N = 420
-IMAGE_M = 420
-
 # define brick size
 BRICK_N = 20
 BRICK_M = 20
 
 # define screen size for pygame window
-DISPLAY_WIDTH = 800
-DISPLAY_HEIGHT = 400
+DISPLAY_WIDTH = BRICK_M * MAP_M
+DISPLAY_HEIGHT = BRICK_N * MAP_N
+
+# define the image size
+IMAGE_N = DISPLAY_HEIGHT + BRICK_N
+IMAGE_M = DISPLAY_WIDTH + BRICK_M
