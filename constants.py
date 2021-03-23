@@ -10,6 +10,11 @@ GREEN = (0, 255, 0)
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 
+
+#define error/success return
+ERROR = -1
+SUCCESS = 1
+
 # define directions
 UP = 0
 LEFT = 1
@@ -35,6 +40,8 @@ FILL = 0.2
 UNKNOWN = -1
 EMPTY = 0
 WALL = 1
+ASTAR = 2
+GREEDY = 3
 
 # define the values for the visited matrix
 NOT_VISITED = 0

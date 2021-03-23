@@ -5,36 +5,36 @@ import numpy as np
 from constants import *
 
 
-class Environment:
+class Map:
     def __init__(self):
-        self.__n = MAP_N
-        self.__m = MAP_M
-        self.__surface = np.zeros((self.__n, self.__m))
+        self.n = MAP_N
+        self.m = MAP_M
+        self.__surface = np.zeros((self.n, self.m))
         self.randomMap(FILL)
 
     def valid_coordinates(self, x, y):
-        return 0 <= x < self.__n and 0 <= y < self.__m
+        return 0 <= x < self.n and 0 <= y < self.m
 
     def getSurface(self):
         return self.__surface
 
     def getN(self):
-        return self.__n
+        return self.n
 
     def getM(self):
-        return self.__m
+        return self.m
 
     def setN(self, n):
-        self.__n = n
+        self.n = n
 
     def setM(self, m):
-        self.__m = m
+        self.m = m
 
     def setSurface(self, surface):
         self.__surface = surface
 
     def validCoordinates(self, x, y):
-        return 0 <= x < self.__n and 0 <= y < self.__m
+        return 0 <= x < self.n and 0 <= y < self.m
 
     def getSurfaceValue(self, x, y):
         if self.validCoordinates(x, y):
@@ -42,15 +42,15 @@ class Environment:
         return -1
 
     def randomMap(self, fill=FILL):
-        for i in range(self.__n):
-            for j in range(self.__m):
+        for i in range(self.n):
+            for j in range(self.m):
                 if random() <= fill:
                     self.__surface[i][j] = WALL
 
     def __str__(self):
         string = ""
-        for i in range(self.__n):
-            for j in range(self.__m):
+        for i in range(self.n):
+            for j in range(self.m):
                 string = string + str(int(self.__surface[i][j]))
             string = string + "\n"
         return string
