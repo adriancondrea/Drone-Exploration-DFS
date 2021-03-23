@@ -34,7 +34,7 @@ MAP_N = 20
 MAP_M = 20
 
 # define the fill for the random map
-FILL = 0.2
+FILL = 0.3
 
 # define the values for the surface matrix
 UNKNOWN = -1

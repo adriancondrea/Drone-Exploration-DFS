@@ -8,6 +8,20 @@ def euclidean_distance(pos1, pos2):
     return (pos1[0] - pos2[0]) ** 2 + (pos1[1] - pos2[1]) ** 2
 
 
+'''
+returns the path from start to current node in a list
+'''
+
+
+def path(current_node):
+    path = []
+    current = current_node
+    while current is not None:
+        path.insert(0, current.position)
+        current = current.parent
+    return path
+
+
 class Controller:
     def __init__(self, map=Map(), drone=Drone()):
         self.map = map
@@ -38,17 +52,8 @@ class Controller:
         return self.__destination
 
     '''
-    marks the path from start to current_node with markValue
-    '''
-
-    def mark_path(self, current_node, markValue):
-        current = current_node
-        while current is not None:
-            self.map.setValue(current.getX(), current.getY(), markValue)
-            current = current.parent
-
-    '''
     performs a* search from start to end, with given move cost
+    returns a list of moves as a list of pairs [x,y]
     '''
 
     def astar_search(self, cost=1):
@@ -75,15 +80,13 @@ class Controller:
                     current_index = index
             # if we get to the maximum number of iteration, mark the current path and exit the method with an error
             if current_iterations > max_iterations:
-                self.mark_path(current_node, ASTAR)
-                return ERROR
+                return ERROR, path(current_node)
             # remove the lowest cost node from to_visit_list and add it to visited list, so it doesn't get visited again
             to_visit_list.pop(current_index)
             visited_list.append(current_node)
             # if we finished searching, mark path and return success
             if current_node == end_node:
-                self.mark_path(current_node, ASTAR)
-                return SUCCESS
+                return SUCCESS, path(current_node)
             # generate children of current node from adjacent squares
             children = []
             for direction in directions:
@@ -119,7 +122,7 @@ class Controller:
                 to_visit_list.append(child)
         # if to_visit_list is empty, and we haven't got to destination, means there is no way from start to
         # end,thus we return ERROR
-        return ERROR
+        return ERROR, path(start_node)
 
     def greedy_search(self):
         start_node = Node(None, self.__drone.getCoordinates())
@@ -145,15 +148,13 @@ class Controller:
                     current_index = index
             # if we get to the maximum number of iteration, mark the current path and exit the method with an error
             if current_iterations > max_iterations:
-                self.mark_path(current_node, ASTAR)
-                return ERROR
+                return ERROR, path(current_node)
             # remove the lowest cost node from to_visit_list and add it to visited list, so it doesn't get visited again
             to_visit_list.pop(current_index)
             visited_list.append(current_node)
             # if we finished searching, mark path and return success
             if current_node == end_node:
-                self.mark_path(current_node, GREEDY)
-                return SUCCESS
+                return SUCCESS, path(current_node)
             # generate children of current node from adjacent squares
             children = []
             for direction in directions:
@@ -185,7 +186,7 @@ class Controller:
                 to_visit_list.append(child)
         # if to_visit_list is empty, and we haven't got to destination, means there is no way from start to
         # end,thus we return ERROR
-        return ERROR
+        return ERROR, path(start_node)
 
     def randomPosition(self):
         x = randint(0, 19)
