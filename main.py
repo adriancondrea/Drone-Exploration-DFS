@@ -1,7 +1,7 @@
-from controller import Controller
-from view import View
+from ui.ui import *
 
 if __name__ == "__main__":
-    controller = Controller()
-    view = View(controller)
-    view.run()
+    ui = Ui()
+    # ui.load_map(["", "res/1.map"])
+    # ui.parameter_setup(["", "res/p.txt"])
+    ui.start()
