@@ -1,6 +1,5 @@
 # Define sleep time between moves
-MOVES_SLEEP_TIME = 1 / 30
-END_SLEEP_TIME = 10
+from random import random
 
 # Creating some colors
 BLUE = (0, 0, 255)
@@ -10,19 +9,16 @@ GREEN = (0, 255, 0)
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 
-
-#define error/success return
-ERROR = -1
-SUCCESS = 1
-
 # define directions
 UP = 0
 LEFT = 1
 DOWN = 2
 RIGHT = 3
 
+
 # define indexes variations and their associated directions
 indexVariations = [[-1, 0], [0, -1], [1, 0], [0, 1]]
+
 directions = [UP, LEFT, DOWN, RIGHT]
 
 # define X and Y axis coordinates in indexVariations
@@ -33,19 +29,17 @@ Y = 1
 MAP_N = 20
 MAP_M = 20
 
-# define the fill for the random map
-FILL = 0.3
+# define the fill for the random map and for the sensors
+WALLS_FILL = 0.2
+SENSORS_FILL = 0.1
 
 # define the values for the surface matrix
 UNKNOWN = -1
 EMPTY = 0
 WALL = 1
-ASTAR = 2
-GREEDY = 3
+SENSOR = 2
 
-# define the values for the visited matrix
-NOT_VISITED = 0
-VISITED = 1
+MAX_SENSOR_VISIBILITY = 5
 
 # define brick size
 BRICK_N = 20
@@ -58,3 +52,18 @@ DISPLAY_HEIGHT = BRICK_N * MAP_N
 # define the image size
 IMAGE_N = DISPLAY_HEIGHT + BRICK_N
 IMAGE_M = DISPLAY_WIDTH + BRICK_M
+
+PARAM_ANTS = 100
+PARAM_ITERATIONS = 100
+PARAM_ALPHA = 1.9
+PARAM_BETA = 0.9
+PARAM_RHO = 0.05
+PARAM_Q0 = 0.5
+PARAM_BATTERY = 50
+
+
+def selection_probabilities(my_list, probabilities):
+    while True:
+        for i in range(len(my_list)):
+            if random() <= probabilities[i]:
+                return my_list[i]

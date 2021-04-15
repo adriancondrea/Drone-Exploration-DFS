@@ -1,7 +1,4 @@
-from ui.ui import *
+from ui.ui import Command
 
 if __name__ == "__main__":
-    ui = Ui()
-    # ui.load_map(["", "res/1.map"])
-    # ui.parameter_setup(["", "res/p.txt"])
-    ui.start()
+    Command().run()

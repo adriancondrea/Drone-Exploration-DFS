@@ -1,4 +1,5 @@
 import time
+from copy import deepcopy
 
 import pygame
 
@@ -10,7 +11,7 @@ def initPyGame(dimension):
     pygame.init()
     logo = pygame.image.load("textures/logo32x32.png")
     pygame.display.set_icon(logo)
-    pygame.display.set_caption("drone exploration with AE")
+    pygame.display.set_caption("drone exploration with ACO")
 
     # create a surface on screen that has the size of 800 x 480
     screen = pygame.display.set_mode(dimension)
@@ -18,60 +19,65 @@ def initPyGame(dimension):
     return screen
 
 
-def closePyGame():
-    # closes the pygame
-    running = True
-    # loop for events
-    while running:
-        # event handling, gets all event from the event queue
-        for event in pygame.event.get():
-            # only do something if the event is of type QUIT
-            if event.type == pygame.QUIT:
-                # change the value to False, to exit the main loop
-                running = False
-    pygame.quit()
-
-
-def movingDrone(currentMap, drone_position, path, speed=1, markSeen=True):
+def movingDrone(currentMap, path, speed=1):
     # animation of a drone on a path
-    screen = initPyGame((currentMap.getM() * 20, currentMap.getN() * 20))
+    screen = initPyGame((currentMap.m * 20, currentMap.n * 20))
 
     drona = pygame.image.load("textures/drona.png")
 
-    path = [drone_position] + path
-    print(path)
+    sensor = pygame.image.load("textures/sensor.png")
 
-    for i in range(len(path)):
+    brick = pygame.Surface((20, 20))
+    brick.fill(GREEN)
+
+    discovered = pygame.Surface((20, 20))
+    discovered.fill(RED)
+
+    for square_index in range(len(path)):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                break
+
         screen.blit(draw_map(currentMap), (0, 0))
-        current_path = [0, 0]
-        for j in range(i + 1):
-            if markSeen:
-                brick = pygame.Surface((20, 20))
-                brick.fill(GREEN)
-                current_path[0], current_path[1] = (current_path[0] + path[j][0], current_path[1] + path[j][1])
-                for direction in indexVariations:
-                    x, y = (current_path[0] + direction[0], current_path[1] + direction[1])
+        for j in range(square_index + 1):
+            screen.blit(brick, (path[j][1] * 20, path[j][0] * 20))
 
-                    while 0 <= x < currentMap.getM() and 0 <= y < currentMap.getN() and currentMap.surface[x][y] != 1:
-                        screen.blit(brick, (x * 20, y * 20))
-                        x += direction[0]
-                        y += direction[1]
-        screen.blit(drona, (current_path[0] * 20, current_path[1] * 20))
+        for square in path[:square_index + 1]:
+            if currentMap.getSurfaceValue(square[0], square[1]) == SENSOR:
+                i, j = square[0], square[1]
+                neighbours = [[i, j]] * 4
+                for _ in range(square[2]):
+                    for direction in directions:
+                        new_neighbour = deepcopy(neighbours[direction])
+                        new_neighbour[X] += indexVariations[direction][X]
+                        new_neighbour[Y] += indexVariations[direction][Y]
+                        if (currentMap.validCoordinates(new_neighbour[X], new_neighbour[Y]) and
+                                currentMap.getSurfaceValue(new_neighbour[X], new_neighbour[Y]) != WALL):
+                            neighbours[direction] = new_neighbour
+                            screen.blit(discovered, (new_neighbour[Y] * 20, new_neighbour[X] * 20))
+
+        for i in range(currentMap.n):
+            for j in range(currentMap.m):
+                if currentMap.surface[i][j] == SENSOR:
+                    screen.blit(sensor, (j * 20, i * 20))
+        screen.blit(drona, (path[square_index][Y] * 20, path[square_index][X] * 20))
         pygame.display.flip()
-        time.sleep(1 * speed)
-    closePyGame()
+        time.sleep(speed)
+
+    time.sleep(50)
+    pygame.quit()
 
 
 def draw_map(currentMap, colour=BLUE, background=WHITE):
     # creates the image of a map
 
-    imagine = pygame.Surface((currentMap.getM() * 20, currentMap.getN() * 20))
-    brick = pygame.Surface((20, 20))
+    imagine = pygame.Surface((currentMap.m * BRICK_M, currentMap.n * BRICK_N))
+    brick = pygame.Surface((BRICK_M, BRICK_N))
     brick.fill(colour)
     imagine.fill(background)
-    for i in range(currentMap.getM()):
-        for j in range(currentMap.getN()):
-            if currentMap.surface[i][j] == 1:
-                imagine.blit(brick, (i * 20, j * 20))
+    for i in range(currentMap.n):
+        for j in range(currentMap.m):
+            if currentMap.surface[i][j] == WALL:
+                imagine.blit(brick, (j * BRICK_M, i * BRICK_N))
 
     return imagine
