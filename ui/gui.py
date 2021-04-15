@@ -19,7 +19,7 @@ def initPyGame(dimension):
     return screen
 
 
-def movingDrone(currentMap, path, speed=1):
+def movingDrone(currentMap, path, speed=0.5):
     # animation of a drone on a path
     screen = initPyGame((currentMap.m * 20, currentMap.n * 20))
 
@@ -71,13 +71,13 @@ def movingDrone(currentMap, path, speed=1):
 def draw_map(currentMap, colour=BLUE, background=WHITE):
     # creates the image of a map
 
-    imagine = pygame.Surface((currentMap.m * BRICK_M, currentMap.n * BRICK_N))
-    brick = pygame.Surface((BRICK_M, BRICK_N))
+    imagine = pygame.Surface((currentMap.m * BRICK_SIZE, currentMap.n * BRICK_SIZE))
+    brick = pygame.Surface((BRICK_SIZE, BRICK_SIZE))
     brick.fill(colour)
     imagine.fill(background)
     for i in range(currentMap.n):
         for j in range(currentMap.m):
             if currentMap.surface[i][j] == WALL:
-                imagine.blit(brick, (j * BRICK_M, i * BRICK_N))
+                imagine.blit(brick, (j * BRICK_SIZE, i * BRICK_SIZE))
 
     return imagine

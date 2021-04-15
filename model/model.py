@@ -7,7 +7,7 @@ from constants.constants import *
 
 
 class Map:
-    def __init__(self, m=MAP_M, n=MAP_N):
+    def __init__(self, m=MAP_SIZE, n=MAP_SIZE):
         self.n = n
         self.m = m
         self.surface = np.zeros((self.m, self.n))
@@ -56,9 +56,9 @@ class Map:
 class Drone:
     def __init__(self, battery_capacity, x=None, y=None):
         if x is None:
-            x = randrange(MAP_M)
+            x = randrange(MAP_SIZE)
         if y is None:
-            y = randrange(MAP_N)
+            y = randrange(MAP_SIZE)
         self.x = x
         self.y = y
         self.battery_capacity = battery_capacity
@@ -116,7 +116,8 @@ class Ant:
                     continue
 
                 cost = (1 / (spent_energy + 1)) ** beta + tau ** alpha
-                sight = current_square[X] + indexVariations[direction][X], current_square[Y] + indexVariations[direction][Y], spent_energy
+                sight = current_square[X] + indexVariations[direction][X], current_square[Y] + \
+                        indexVariations[direction][Y], spent_energy
                 next_square = [sight, cost]
 
                 if self.spent_energy[sight[0]][sight[1]] <= spent_energy:
@@ -138,3 +139,10 @@ class Ant:
         self.path.append(next_square)
         self.battery_left -= spent_energy + 1
         self.spent_energy[next_square[0]][next_square[1]] = spent_energy
+
+
+def selection_probabilities(my_list, probabilities):
+    while True:
+        for i in range(len(my_list)):
+            if random() <= probabilities[i]:
+                return my_list[i]
