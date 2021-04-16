@@ -80,6 +80,8 @@ class Ant:
         self.spent_energy[drone.x][drone.y] = sensor_energy
         self.battery_left = drone.battery_capacity - sensor_energy
 
+        self.seen = np.zeros((self.map.m, self.map.n))
+
     def check_coverage(self):
         marked = np.full((self.map.m, self.map.n), False)
         for i, j, energy in self.path:
@@ -106,6 +108,11 @@ class Ant:
 
     def increase_path(self, pheromone_matrix, alpha, beta, q0):
         current_square = (self.path[-1][0], self.path[-1][1])
+        self.seen[current_square[0]][current_square[1]] = 1
+        if len(self.path) > 1:
+            previous = [self.path[-2][0], self.path[-2][1]]
+        else:
+            previous = None
         possible_next_squares = []
 
         for direction in directions:
@@ -121,6 +128,9 @@ class Ant:
                 next_square = [sight, cost]
 
                 if self.spent_energy[sight[0]][sight[1]] <= spent_energy:
+                    if previous:
+                        if [sight[0], sight[1]] == [previous[0], previous[1]]:
+                            continue
                     possible_next_squares.append(next_square)
         if not possible_next_squares:
             return

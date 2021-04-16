@@ -30,7 +30,7 @@ class Controller:
 
         self.initial_pheromone_matrix = deepcopy(self.pheromone_matrix)
 
-    def iterate(self) -> Ant:
+    def iterate(self):
         population = []
         for _ in range(PARAM_ANTS):
             population.append(Ant(self.drone, self.map))
